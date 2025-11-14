@@ -62,6 +62,28 @@ public class PetController {
                 .orElse(null);
     }
 
+    @PutMapping("/mascota/{nombre}")
+    public Mascota updatePet(
+            @PathVariable("nombre") String nombre,
+            @RequestBody Mascota mascotaActualizada) {
+
+        for (int i = 0; i < pets.size(); i++) {
+            Mascota p = pets.get(i);
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                mascotaActualizada.setNombre(nombre);
+                pets.set(i, mascotaActualizada);
+                return mascotaActualizada;
+            }
+        }
+
+        return null;
+    }
+
+    @DeleteMapping("/mascota/{nombre}")
+    public boolean deletePet(@PathVariable("nombre") String nombre) {
+        return pets.removeIf(p -> p.getNombre().equalsIgnoreCase(nombre));
+    }
+
     @PostMapping("/mascota/registrar")
     public Mascota registerPet(@RequestBody Mascota mascota) {
         pets.add(mascota);
