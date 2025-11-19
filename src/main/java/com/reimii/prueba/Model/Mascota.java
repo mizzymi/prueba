@@ -1,6 +1,14 @@
 package com.reimii.prueba.Model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "mascotas")
 public class Mascota {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;   // PK en la tabla
 
     private String nombre;
     private String animal;
@@ -32,82 +40,41 @@ public class Mascota {
         this.nombreDueno = nombreDueno;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getAnimal() {
-        return animal;
-    }
+    public String getAnimal() { return animal; }
+    public void setAnimal(String animal) { this.animal = animal; }
 
-    public void setAnimal(String animal) {
-        this.animal = animal;
-    }
+    public String getRaza() { return raza; }
+    public void setRaza(String raza) { this.raza = raza; }
 
-    public String getRaza() {
-        return raza;
-    }
+    public int getEdadAnios() { return edadAnios; }
+    public void setEdadAnios(int edadAnios) { this.edadAnios = edadAnios; }
 
-    public void setRaza(String raza) {
-        this.raza = raza;
-    }
+    public double getPesoKg() { return pesoKg; }
+    public void setPesoKg(double pesoKg) { this.pesoKg = pesoKg; }
 
-    public int getEdadAnios() {
-        return edadAnios;
-    }
+    public boolean isVacunado() { return vacunado; }
+    public void setVacunado(boolean vacunado) { this.vacunado = vacunado; }
 
-    public void setEdadAnios(int edadAnios) {
-        this.edadAnios = edadAnios;
-    }
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
-    public double getPesoKg() {
-        return pesoKg;
-    }
+    public String getNombreDueno() { return nombreDueno; }
+    public void setNombreDueno(String nombreDueno) { this.nombreDueno = nombreDueno; }
 
-    public void setPesoKg(double pesoKg) {
-        this.pesoKg = pesoKg;
-    }
-
-    public boolean isVacunado() {
-        return vacunado;
-    }
-
-    public void setVacunado(boolean vacunado) {
-        this.vacunado = vacunado;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getNombreDueno() {
-        return nombreDueno;
-    }
-
-    public void setNombreDueno(String nombreDueno) {
-        this.nombreDueno = nombreDueno;
-    }
-
-    public void cumplirAnio() {
-        this.edadAnios++;
-    }
-
-    public void vacunar() {
-        this.vacunado = true;
-    }
+    public void cumplirAnio() { this.edadAnios++; }
+    public void vacunar() { this.vacunado = true; }
 
     @Override
     public String toString() {
         return "Mascota{" +
-                "nombre='" + nombre + '\'' +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
                 ", animal='" + animal + '\'' +
                 ", raza='" + raza + '\'' +
                 ", edadAnios=" + edadAnios +
