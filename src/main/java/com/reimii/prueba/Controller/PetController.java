@@ -1,48 +1,20 @@
 package com.reimii.prueba.Controller;
 
 import com.reimii.prueba.Model.Mascota;
+import com.reimii.prueba.Service.MascotaService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class PetController {
 
-    private List<Mascota> pets = new ArrayList<>(Arrays.asList(
-        new Mascota(
-                "Leia",
-                "Perro",
-                "Labrador",
-                11,
-                19.95,
-                true,
-                "marrón, blanco y negro",
-                "Marta y Jordi"
-        ),
-        new Mascota(
-                "Kyra",
-                "Perro",
-                "Labrador",
-                15,
-                22.3,
-                true,
-                "blanco y negro",
-                "Marta y Jordi"
-        ),
-        new Mascota(
-                "Ania",
-                "Gato",
-                "Carey",
-                1,
-                3.2,
-                false,
-                "naranja y negro",
-                "Mizzy"
-        )
-    ));
+    private final MascotaService mascotaService;
+
+    public PetController(MascotaService mascotaService) {
+        this.mascotaService = mascotaService;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -51,15 +23,17 @@ public class PetController {
 
     @GetMapping("/mascotas")
     public List<Mascota> getPets() {
-        return pets;
+        return mascotaService.findAll();
     }
 
     @GetMapping("/mascota/{nombre}")
     public Mascota getPetByName(@PathVariable("nombre") String nombre) {
-        return pets.stream()
-                .filter(p -> p.getNombre().equalsIgnoreCase(nombre))
-                .findFirst()
-                .orElse(null);
+        return mascotaService.findByNombre(nombre).orElse(null);
+    }
+
+    @PostMapping("/mascota/registrar")
+    public Mascota registerPet(@RequestBody Mascota mascota) {
+        return mascotaService.save(mascota);
     }
 
     @PutMapping("/mascota/{nombre}")
@@ -67,26 +41,22 @@ public class PetController {
             @PathVariable("nombre") String nombre,
             @RequestBody Mascota mascotaActualizada) {
 
-        for (int i = 0; i < pets.size(); i++) {
-            Mascota p = pets.get(i);
-            if (p.getNombre().equalsIgnoreCase(nombre)) {
-                mascotaActualizada.setNombre(nombre);
-                pets.set(i, mascotaActualizada);
-                return mascotaActualizada;
-            }
-        }
-
-        return null;
+        return mascotaService.findByNombre(nombre)
+                .map(m -> {
+                    m.setAnimal(mascotaActualizada.getAnimal());
+                    m.setRaza(mascotaActualizada.getRaza());
+                    m.setEdadAnios(mascotaActualizada.getEdadAnios());
+                    m.setPesoKg(mascotaActualizada.getPesoKg());
+                    m.setVacunado(mascotaActualizada.isVacunado());
+                    m.setColor(mascotaActualizada.getColor());
+                    m.setNombreDueno(mascotaActualizada.getNombreDueno());
+                    return mascotaService.save(m);
+                })
+                .orElse(null);
     }
 
     @DeleteMapping("/mascota/{nombre}")
     public boolean deletePet(@PathVariable("nombre") String nombre) {
-        return pets.removeIf(p -> p.getNombre().equalsIgnoreCase(nombre));
-    }
-
-    @PostMapping("/mascota/registrar")
-    public Mascota registerPet(@RequestBody Mascota mascota) {
-        pets.add(mascota);
-        return mascota;
+        return mascotaService.deleteByNombre(nombre);
     }
 }
